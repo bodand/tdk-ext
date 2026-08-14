@@ -6,7 +6,7 @@ open import Cubical.Foundations.Prelude
 
 -- Egy Setoid-kategória definíciója
 -- o: objektumok univerzumszintje
--- ℓ: morfizmusok (nyilak) univerzumszintje
+-- ℓ: morfizmusok univerzumszintje
 -- r: ekvivalenciareláció univerzumszintje
 record SetoidCategory (o ℓ r : Level) : Type (ℓ-suc (ℓ-max o (ℓ-max ℓ r))) where
    infix 30 _≈_
@@ -27,13 +27,11 @@ record SetoidCategory (o ℓ r : Level) : Type (ℓ-suc (ℓ-max o (ℓ-max ℓ 
       id : {A : Ob} → Hom A A
       _∘_ : {A B C : Ob} → Hom B C → Hom A B → Hom A C
 
-      -- A kompozíció kongruens a relációra nézve (kicserélhetjük a részeket)
       ∘-cong : {A B C : Ob} {f f′ : Hom A B} {g g′ : Hom B C}
          → f ≈ f′
          → g ≈ g′
          → g ∘ f ≈ g′ ∘ f′
 
-      -- Kategóriatörvények, de CSAK ≈ szerint (itt jön ki a setoid-jelleg)
       id-left  : {A B : Ob} (f : Hom A B) → id ∘ f ≈ f
       id-right : {A B : Ob} (f : Hom A B) → f ∘ id ≈ f
 
