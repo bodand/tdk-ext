@@ -1,0 +1,30 @@
+= TDK Extenzionálás
+
+https://github.com/mozow01/TDK-temak/blob/main/TDK-temakiiras.md
+
+== Ellenőrzés
+
+Az projekt makefileja a teljes projektet típus ellenőrizteti az Agdával:
+
+----
+make
+----
+
+== Struktúra
+
+----
+.
+├── LICENSE
+├── Makefile
+├── README.adoc
+├── src
+│   ├── Cubical <1>
+│   │   └── Category.agda
+│   ├── Setoid <2>
+│   │   └── Category.agda
+│   └── Index.agda <3>
+└── tdk-ext.agda-lib
+----
+<1> A Cubical Agda alapú definíciók.
+<2> A szetoid alapú definíciók.
+<3> Segéd fájl a teljes projekt egyszerre vett típus ellenőrzéséhez.
