@@ -1,0 +1,7 @@
+[plugins]
+cabal = "https://github.com/mise-plugins/mise-ghcup.git"
+
+[tools]
+ghc = "latest"
+cabal = "latest"
+python = "3.12"
