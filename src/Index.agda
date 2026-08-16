@@ -2,5 +2,7 @@
 
 module Index where
 
-import Cubical.Category
 import Setoid.Category
+
+import Cubical.Category
+import Cubical.Functor

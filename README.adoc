@@ -18,6 +18,7 @@ make
 ├── src
 │   ├── Cubical <1>
 │   │   └── Category.agda
+│   │   └── Functor.agda
 │   ├── Setoid <2>
 │   │   └── Category.agda
 │   └── Index.agda <3>
