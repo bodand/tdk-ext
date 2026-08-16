@@ -1,5 +1,5 @@
 .POSIX:
-.PHONY: all trim clean distclean
+.PHONY: all lint clean distclean
 
 all:
 	agda src/Index.agda

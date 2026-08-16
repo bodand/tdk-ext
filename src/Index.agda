@@ -6,3 +6,5 @@ import Setoid.Category
 
 import Cubical.Category
 import Cubical.Functor
+import Cubical.Monad
+
