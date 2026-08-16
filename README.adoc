@@ -1,10 +1,8 @@
-= TDK Extenzionálás
-
-https://github.com/mozow01/TDK-temak/blob/main/TDK-temakiiras.md
+= TDK Szetoid és kubikális kategóriák ekvivalens reprezentációi
 
 == Ellenőrzés
 
-Az projekt makefileja a teljes projektet típus ellenőrizteti az Agdával:
+A projekt makefileja a teljes projektet típus ellenőrizteti az Agdával:
 
 ----
 make
