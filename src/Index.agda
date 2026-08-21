@@ -2,13 +2,11 @@
 
 module Index where
 
-import Setoid.Category
-import Setoid.Functor
-import Setoid.Monad
-import Setoid.Comonad
+import Common.Comonad
+import Common.Functor
+import Common.Monad
 
+import Meta.Category
 import Cubical.Category
-import Cubical.Functor
-import Cubical.Monad
-import Cubical.Comonad
+import Setoid.Category
 

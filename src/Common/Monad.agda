@@ -31,8 +31,8 @@ record Monad {o ℓ r : Level} (C : Category o ℓ r) : Type (ℓ-max o (ℓ-max
       left-id  : {X : C.Ob}
              → (join {X}) ∘C (return {M-obj X}) ~ C.id {M-obj X}
 
-      right-id : {X : C.Ob} 
+      right-id : {X : C.Ob}
              → (join {X}) ∘C (M-map (return {X})) ~ C.id {M-obj X}
 
-      assoc    : {X : C.Ob} 
+      assoc    : {X : C.Ob}
              → (join {X}) ∘C (M-map (join {X})) ~ (join {X}) ∘C (join {M-obj X})
