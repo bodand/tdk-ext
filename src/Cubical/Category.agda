@@ -4,20 +4,27 @@ module Cubical.Category where
 
 open import Cubical.Foundations.Prelude
 
-record Category (o ℓ : Level) : Type (ℓ-suc (ℓ-max o ℓ)) where
-   infixr 40 _∘_
+open import Meta.Equality
+import Meta.Category as MC
 
-   field
-      Ob  : Type o
-      Hom : Ob → Ob → Type ℓ
+equality : {ℓ : Level} (A : Type ℓ) → Equality {ℓ} {ℓ} A
+equality A = record
+   { _~=_ = _≡_
+   ; ~=-refl = refl
+   ; ~=-sym = sym
+   ; ~=-trans = _∙_
+   }
 
-      isSetHom : {A B : Ob} → isSet (Hom A B)
+Category : (ℓ : Level) → MC.Category (ℓ-suc ℓ) ℓ ℓ
+Category ℓ = record
+   { Ob       = Type ℓ
+   ; Hom      = λ A B → (A → B)
+   ; Eq       = λ A B → equality (A → B)
+   ; id       = λ x → x
+   ; _∘_      = λ f g x → f (g x)
+   ; ∘-cong   = λ p q i x → q i (p i x)
+   ; id-left  = λ f → refl
+   ; id-right = λ f → refl
+   ; assoc    = λ f g h → refl
+   }
 
-      id : {A : Ob} → Hom A A
-      _∘_ : {A B C : Ob} → Hom B C → Hom A B → Hom A C
-
-      id-left  : {A B : Ob} (f : Hom A B) → id ∘ f ≡ f
-      id-right : {A B : Ob} (f : Hom A B) → f ∘ id ≡ f
-
-      assoc : {A B C D : Ob} (f : Hom A B) (g : Hom B C) (h : Hom C D)
-         → h ∘ (g ∘ f) ≡ (h ∘ g) ∘ f

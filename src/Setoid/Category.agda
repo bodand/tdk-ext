@@ -4,33 +4,41 @@ module Setoid.Category where
 
 open import Cubical.Foundations.Prelude
 
-record SetoidCategory (o ℓ r : Level) : Type (ℓ-suc (ℓ-max o (ℓ-max ℓ r))) where
-   infix 30 _≈_
-   infixr 40 _∘_
+open import Setoid.Setoid
+open import Meta.Equality
+import Meta.Category as MC
 
-   field
-      Ob  : Type o
-      Hom : Ob → Ob → Type ℓ
+equality : {c₁ ℓ₁ c₂ ℓ₂ : Level} (A : Setoid c₁ ℓ₁) (B : Setoid c₂ ℓ₂)
+         → Equality (SetoidHom A B)
+equality A B = record
+   { _~=_     = _≈Hom_
 
-      _≈_ : {A B : Ob} → Hom A B → Hom A B → Type r
+   -- Bizonyítjuk, hogy ez ekvivalenciareláció (a cél-szetoid B tulajdonságaiból)
+   ; ~=-refl  = λ x → Setoid.≈-refl B
+   ; ~=-sym   = λ p x → Setoid.≈-sym B (p x)
+   ; ~=-trans = λ p q x → Setoid.≈-trans B (p x) (q x)
+   }
 
-      ≈-isProp : {A B : Ob} (f g : Hom A B) → isProp (f ≈ g)
+Category : (c ℓ : Level) → MC.Category (ℓ-suc (ℓ-max c ℓ)) (ℓ-max c ℓ) (ℓ-max c ℓ)
+Category c ℓ = record
+   { Ob       = Setoid c ℓ
+   ; Hom      = SetoidHom
+   ; Eq       = equality
 
-      ≈-refl  : {A B : Ob} (f : Hom A B) → f ≈ f
-      ≈-sym   : {A B : Ob} {f g : Hom A B} → f ≈ g → g ≈ f
-      ≈-trans : {A B : Ob} {f g h : Hom A B} → f ≈ g → g ≈ h → f ≈ h
+   ; id       = λ {A} → record
+                 { fun = λ x → x
+                 ; preserves = λ p → p
+                 }
 
-      id : {A : Ob} → Hom A A
-      _∘_ : {A B C : Ob} → Hom B C → Hom A B → Hom A C
+   ; _∘_      = λ {A B C} g f → record
+                 { fun = λ x → SetoidHom.fun g (SetoidHom.fun f x)
+                 ; preserves = λ p → SetoidHom.preserves g (SetoidHom.preserves f p)
+                 }
 
-      ∘-cong : {A B C : Ob} {f f′ : Hom A B} {g g′ : Hom B C}
-         → f ≈ f′
-         → g ≈ g′
-         → g ∘ f ≈ g′ ∘ f′
-
-      id-left  : {A B : Ob} (f : Hom A B) → id ∘ f ≈ f
-      id-right : {A B : Ob} (f : Hom A B) → f ∘ id ≈ f
-
-      assoc : {A B C D : Ob} (f : Hom A B) (g : Hom B C) (h : Hom C D)
-         → h ∘ (g ∘ f) ≈ (h ∘ g) ∘ f
+   ; ∘-cong   = λ {A B C} {f f′ g g′} p q x →
+                 Setoid.≈-trans C (SetoidHom.preserves g (p x)) (q (SetoidHom.fun f′ x))
+   ; id-left  = λ {A B} f x → Setoid.≈-refl B
+   ; id-right = λ {A B} f x → Setoid.≈-refl B
+   ; assoc    = λ {A B C D} f g h x → Setoid.≈-refl D
+   }
 

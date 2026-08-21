@@ -9,6 +9,7 @@ lint:
 
 clean:
 	find . -name "*.agdai" -type f -delete
+	find . -name "*.agda.vim" -type f -delete
 
 distclean: clean
 	rm -rf _build
