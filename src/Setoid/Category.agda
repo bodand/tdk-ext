@@ -4,10 +4,6 @@ module Setoid.Category where
 
 open import Cubical.Foundations.Prelude
 
--- Egy Setoid-kategória definíciója
--- o: objektumok univerzumszintje
--- ℓ: morfizmusok univerzumszintje
--- r: ekvivalenciareláció univerzumszintje
 record SetoidCategory (o ℓ r : Level) : Type (ℓ-suc (ℓ-max o (ℓ-max ℓ r))) where
    infix 30 _≈_
    infixr 40 _∘_
