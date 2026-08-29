@@ -13,8 +13,8 @@ record Functor {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
       module C = Category C
       module D = Category D
 
-      _~C_ = λ {A B} → (C._~=_ {A} {B})
-      _~D_ = λ {A B} → (D._~=_ {A} {B})
+      open C using () renaming (_~=_ to _~C_; _∘_ to _∘C_)
+      open D using () renaming (_~=_ to _~D_; _∘_ to _∘D_)
 
    field
       F-obj : C.Ob → D.Ob
@@ -28,5 +28,5 @@ record Functor {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
          → F-map (C.id {A}) ~D D.id {F-obj A}
 
       F-comp : {A B X : C.Ob} (f : C.Hom A B) (g : C.Hom B X)
-           → F-map (C._∘_ g f) ~D D._∘_ (F-map g) (F-map f)
+           → F-map (g ∘C f) ~D (F-map g) ∘D (F-map f)
 

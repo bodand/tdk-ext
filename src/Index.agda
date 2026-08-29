@@ -10,3 +10,5 @@ import Meta.Category
 import Cubical.Category
 import Setoid.Category
 
+import Common.Adjoint
+
