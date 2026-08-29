@@ -3,27 +3,22 @@
 module Setoid.Category where
 
 open import Cubical.Foundations.Prelude
+open import Cubical.Relation.Binary as R
 
 open import Setoid.Setoid
-open import Meta.Equality
 import Meta.Category as MC
-
-equality : {c₁ ℓ₁ c₂ ℓ₂ : Level} (A : Setoid c₁ ℓ₁) (B : Setoid c₂ ℓ₂)
-         → Equality (SetoidHom A B)
-equality A B = record
-   { _~=_     = _≈Hom_
-
-   -- Bizonyítjuk, hogy ez ekvivalenciareláció (a cél-szetoid B tulajdonságaiból)
-   ; ~=-refl  = λ x → Setoid.≈-refl B
-   ; ~=-sym   = λ p x → Setoid.≈-sym B (p x)
-   ; ~=-trans = λ p q x → Setoid.≈-trans B (p x) (q x)
-   }
 
 Category : (c ℓ : Level) → MC.Category (ℓ-suc (ℓ-max c ℓ)) (ℓ-max c ℓ) (ℓ-max c ℓ)
 Category c ℓ = record
    { Ob       = Setoid c ℓ
    ; Hom      = SetoidHom
-   ; Eq       = equality
+
+   ; _~=_     = _≈Hom_
+   ; ~=-equiv = λ {A B} → record
+      { reflexive  = λ f x → Setoid.≈-refl B
+      ; symmetric  = λ f g p x → Setoid.≈-sym B (p x)
+      ; transitive = λ f g h p q x → Setoid.≈-trans B (p x) (q x)
+      }
 
    ; id       = λ {A} → record
                  { fun = λ x → x

@@ -3,16 +3,22 @@
 module Setoid.Setoid where
 
 open import Cubical.Foundations.Prelude
-
-open import Meta.Equality
+open import Cubical.Relation.Binary as R
 
 record Setoid (c ℓ : Level) : Type (ℓ-suc (ℓ-max c ℓ)) where
    field
       Carrier : Type c
       _≈_     : Carrier → Carrier → Type ℓ
-      ≈-refl  : {x : Carrier} → x ≈ x
-      ≈-sym   : {x y : Carrier} → x ≈ y → y ≈ x
-      ≈-trans : {x y z : Carrier} → x ≈ y → y ≈ z → x ≈ z
+      ≈-equiv : R.BinaryRelation.isEquivRel _≈_
+
+   ≈-refl  : {x : Carrier} → x ≈ x
+   ≈-refl {x} = R.BinaryRelation.isEquivRel.reflexive ≈-equiv x
+
+   ≈-sym   : {x y : Carrier} → x ≈ y → y ≈ x
+   ≈-sym {x} {y} p = R.BinaryRelation.isEquivRel.symmetric ≈-equiv x y p
+
+   ≈-trans : {x y z : Carrier} → x ≈ y → y ≈ z → x ≈ z
+   ≈-trans {x} {y} {z} p q = R.BinaryRelation.isEquivRel.transitive ≈-equiv x y z p q
 
 record SetoidHom {c₁ ℓ₁ c₂ ℓ₂ : Level} (A : Setoid c₁ ℓ₁) (B : Setoid c₂ ℓ₂)
                  : Type (ℓ-max (ℓ-max c₁ ℓ₁) (ℓ-max c₂ ℓ₂)) where

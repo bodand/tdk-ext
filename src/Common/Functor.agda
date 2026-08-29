@@ -3,7 +3,6 @@
 module Common.Functor where
 
 open import Cubical.Foundations.Prelude
-open import Meta.Equality
 open import Meta.Category
 
 record Functor {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
@@ -14,8 +13,8 @@ record Functor {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
       module C = Category C
       module D = Category D
 
-      _~C_ = λ {A B} → Equality._~=_ (C.Eq A B)
-      _~D_ = λ {A B} → Equality._~=_ (D.Eq A B)
+      _~C_ = λ {A B} → (C._~=_ {A} {B})
+      _~D_ = λ {A B} → (D._~=_ {A} {B})
 
    field
       F-obj : C.Ob → D.Ob

@@ -4,7 +4,6 @@ module Common.Monad where
 
 open import Cubical.Foundations.Prelude
 
-open import Meta.Equality
 open import Meta.Category
 
 open import Common.Functor
@@ -12,7 +11,7 @@ open import Common.Functor
 record Monad {o ℓ r : Level} (C : Category o ℓ r) : Type (ℓ-max o (ℓ-max ℓ r)) where
    private
       module C = Category C
-      _~_ = λ {A B} → Equality._~=_ (C.Eq A B)
+      _~_ = λ {A B} → C._~=_ {A} {B}
 
    field
       F : Functor C C
@@ -20,19 +19,22 @@ record Monad {o ℓ r : Level} (C : Category o ℓ r) : Type (ℓ-max o (ℓ-max
    private
       module M = Functor F
       M-obj = M.F-obj
-      M-map = M.F-map
 
       open C using () renaming (_∘_ to _∘C_)
 
    field
       return : {X : C.Ob} → C.Hom X (M-obj X)
-      join   : {X : C.Ob} → C.Hom (M-obj (M-obj X)) (M-obj X)
+      bind : {X Y : C.Ob} → C.Hom X (M-obj Y) → C.Hom (M-obj X) (M-obj Y)
 
-      left-id  : {X : C.Ob}
-             → (join {X}) ∘C (return {M-obj X}) ~ C.id {M-obj X}
+      bind-proper : {X Y : C.Ob} {f g : C.Hom X (M-obj Y)}
+                  → f ~ g → bind f ~ bind g
 
-      right-id : {X : C.Ob}
-             → (join {X}) ∘C (M-map (return {X})) ~ C.id {M-obj X}
+      left-id : {X Y : C.Ob} {f : C.Hom X (M-obj Y)}
+              → (bind f) ∘C (return {X}) ~ f
 
-      assoc    : {X : C.Ob}
-             → (join {X}) ∘C (M-map (join {X})) ~ (join {X}) ∘C (join {M-obj X})
+      right-id : {X Y : C.Ob}
+               → bind (return {X}) ~ C.id {M-obj X}
+
+      assic : {X Y Z : C.Ob} (f : C.Hom X (M-obj Y)) (g : C.Hom Y (M-obj Z))
+            → (bind g) ∘C (bind f) ~ bind ((bind g) ∘C f)
+
