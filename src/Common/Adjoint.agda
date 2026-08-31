@@ -7,6 +7,7 @@ open import Meta.Category
 
 open import Common.Functor
 open import Common.Monad
+open import Common.Comonad
 
 record RightAdjoint {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
                     (C : Category o₁ ℓ₁ r₁)
@@ -198,23 +199,23 @@ RightAdjointMonad {C = C} {D = D} {G = G} RA = record
    ; bind        = λ f → G.F-map (left-adj-mor f)
    ; bind-proper = λ p → G.F-proper (left-adj-mor-proper p)
    ; left-id     = λ {X Y f} → lambek-1-dual f
-   ; right-id    = λ {X Y} → D.~=-trans 
-      (G.F-proper (C.~=-trans 
-         (left-adj-mor-proper (D.~=-trans 
-            (D.~=-sym (D.id-left unit)) 
-            (D.~=-sym (D.∘-cong 
-               D.~=-refl 
+   ; right-id    = λ {X Y} → D.~=-trans
+      (G.F-proper (C.~=-trans
+         (left-adj-mor-proper (D.~=-trans
+            (D.~=-sym (D.id-left unit))
+            (D.~=-sym (D.∘-cong
+               D.~=-refl
                G.F-id))))
-         (lambek-2-dual C.id)))  
+         (lambek-2-dual C.id)))
       G.F-id
 
-   ; assoc       = λ f g → D.~=-trans 
-      (D.~=-sym (G.F-comp (left-adj-mor f) (left-adj-mor g))) 
-      (G.F-proper (C.~=-trans 
-         (C.~=-sym (lambek-2-dual (left-adj-mor g ∘C left-adj-mor f))) 
-         (left-adj-mor-proper (D.~=-trans 
-            (D.∘-cong D.~=-refl (G.F-comp (left-adj-mor f) (left-adj-mor g))) 
-            (D.~=-trans 
+   ; assoc       = λ f g → D.~=-trans
+      (D.~=-sym (G.F-comp (left-adj-mor f) (left-adj-mor g)))
+      (G.F-proper (C.~=-trans
+         (C.~=-sym (lambek-2-dual (left-adj-mor g ∘C left-adj-mor f)))
+         (left-adj-mor-proper (D.~=-trans
+            (D.∘-cong D.~=-refl (G.F-comp (left-adj-mor f) (left-adj-mor g)))
+            (D.~=-trans
                (D.~=-sym (D.assoc unit (G.F-map (left-adj-mor f)) (G.F-map (left-adj-mor g))))
                (D.∘-cong (lambek-1-dual f) D.~=-refl))))))
    }
@@ -228,3 +229,48 @@ RightAdjointMonad {C = C} {D = D} {G = G} RA = record
       open C using () renaming (_∘_ to _∘C_)
 
       module L = Functor (LeftAdjointFunctor RA)
+
+LeftAdjointComonad : {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
+                   {C : Category o₁ ℓ₁ r₁} {D : Category o₂ ℓ₂ r₂}
+                   {G : Functor D C}
+                   → LeftAdjoint C D G
+                   → Comonad C
+LeftAdjointComonad {C = C} {D = D} {G = G} LA = record
+   { W             = record
+       { F-obj    = λ X → G.F-obj (R.F-obj X)
+       ; F-map    = λ f → G.F-map (R.F-map f)
+       ; F-proper = λ p → G.F-proper (R.F-proper p)
+       ; F-id     = C.~=-trans (G.F-proper R.F-id) G.F-id
+       ; F-comp   = λ f g → C.~=-trans (G.F-proper (R.F-comp f g)) (G.F-comp (R.F-map f) (R.F-map g))
+       }
+   ; extract       = ε
+   ; extend        = λ f → G.F-map (right-adj-mor f)
+   ; extend-proper = λ p → G.F-proper (right-adj-mor-proper p)
+   ; left-id       = λ f → lambek-1 f
+   ; right-id      = λ {X} → C.~=-trans
+      (G.F-proper (D.~=-trans
+         (right-adj-mor-proper (C.~=-trans
+            (C.~=-sym (C.id-right ε))
+            (C.∘-cong (C.~=-sym G.F-id) C.~=-refl)))
+         (lambek-2 D.id)))
+      G.F-id
+   ; coassoc       = λ f g → C.~=-trans
+      (C.~=-sym (G.F-comp (right-adj-mor f) (right-adj-mor g)))
+      (G.F-proper (D.~=-trans
+         (D.~=-sym (lambek-2 (right-adj-mor g ∘D right-adj-mor f)))
+         (right-adj-mor-proper (C.~=-trans
+            (C.∘-cong (G.F-comp (right-adj-mor f) (right-adj-mor g)) C.~=-refl)
+            (C.~=-trans
+               (C.assoc (G.F-map (right-adj-mor f)) (G.F-map (right-adj-mor g)) ε)
+               (C.∘-cong C.~=-refl (lambek-1 g)))))))
+   }
+   where
+       open LeftAdjoint LA
+       module C = Category C
+       module D = Category D
+       module G = Functor G
+
+       open C using () renaming (_∘_ to _∘C_)
+       open D using () renaming (_∘_ to _∘D_)
+
+       module R = Functor (RightAdjointFunctor LA)
