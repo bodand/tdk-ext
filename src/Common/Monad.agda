@@ -35,6 +35,6 @@ record Monad {o ℓ r : Level} (C : Category o ℓ r) : Type (ℓ-max o (ℓ-max
       right-id : {X Y : C.Ob}
                → bind (return {X}) ~ C.id {M-obj X}
 
-      assic : {X Y Z : C.Ob} (f : C.Hom X (M-obj Y)) (g : C.Hom Y (M-obj Z))
+      assoc : {X Y Z : C.Ob} (f : C.Hom X (M-obj Y)) (g : C.Hom Y (M-obj Z))
             → (bind g) ∘C (bind f) ~ bind ((bind g) ∘C f)
 

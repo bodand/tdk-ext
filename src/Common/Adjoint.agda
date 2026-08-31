@@ -181,3 +181,50 @@ RightAdjointFunctor {C = C} {D = D} {F = F} LA = record
       open D using () renaming (_∘_ to _∘D_)
       open C using () renaming (_∘_ to _∘C_)
 
+RightAdjointMonad : {o₁ ℓ₁ r₁ o₂ ℓ₂ r₂ : Level}
+                    {C : Category o₁ ℓ₁ r₁} {D : Category o₂ ℓ₂ r₂}
+                    {G : Functor C D}
+                    → RightAdjoint C D G
+                    → Monad D
+RightAdjointMonad {C = C} {D = D} {G = G} RA = record
+   { F = record
+       { F-obj    = λ X → G.F-obj (L.F-obj X)
+       ; F-map    = λ f → G.F-map (L.F-map f)
+       ; F-proper = λ p → G.F-proper (L.F-proper p)
+       ; F-id     = D.~=-trans (G.F-proper L.F-id) G.F-id
+       ; F-comp   = λ f g → D.~=-trans (G.F-proper (L.F-comp f g)) (G.F-comp (L.F-map f) (L.F-map g))
+       }
+   ; return      = unit
+   ; bind        = λ f → G.F-map (left-adj-mor f)
+   ; bind-proper = λ p → G.F-proper (left-adj-mor-proper p)
+   ; left-id     = λ {X Y f} → lambek-1-dual f
+   ; right-id    = λ {X Y} → D.~=-trans 
+      (G.F-proper (C.~=-trans 
+         (left-adj-mor-proper (D.~=-trans 
+            (D.~=-sym (D.id-left unit)) 
+            (D.~=-sym (D.∘-cong 
+               D.~=-refl 
+               G.F-id))))
+         (lambek-2-dual C.id)))  
+      G.F-id
+
+   ; assoc       = λ f g → D.~=-trans 
+      (D.~=-sym (G.F-comp (left-adj-mor f) (left-adj-mor g))) 
+      (G.F-proper (C.~=-trans 
+         (C.~=-sym (lambek-2-dual (left-adj-mor g ∘C left-adj-mor f))) 
+         (left-adj-mor-proper (D.~=-trans 
+            (D.∘-cong D.~=-refl (G.F-comp (left-adj-mor f) (left-adj-mor g))) 
+            (D.~=-trans 
+               (D.~=-sym (D.assoc unit (G.F-map (left-adj-mor f)) (G.F-map (left-adj-mor g))))
+               (D.∘-cong (lambek-1-dual f) D.~=-refl))))))
+   }
+   where
+      open RightAdjoint RA
+      module C = Category C
+      module D = Category D
+      module G = Functor G
+
+      open D using () renaming (_∘_ to _∘D_)
+      open C using () renaming (_∘_ to _∘C_)
+
+      module L = Functor (LeftAdjointFunctor RA)
