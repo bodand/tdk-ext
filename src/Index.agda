@@ -12,3 +12,6 @@ import Setoid.Category
 
 import Common.Adjoint
 
+import Common.JFunctor
+import Common.QFunctor
+
