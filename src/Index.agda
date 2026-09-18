@@ -14,4 +14,4 @@ import Common.Adjoint
 
 import Common.JFunctor
 import Common.QFunctor
-
+import Common.QJAdjunction

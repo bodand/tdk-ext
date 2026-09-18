@@ -13,7 +13,7 @@ open import Setoid.Setoid
 
 Q : (ℓ : Level) → Functor (SetoidC.Category ℓ ℓ) (CubicalC.Category ℓ)
 Q ℓ = record
-   { F-obj    = λ S → (Setoid.Carrier S) / (Setoid._≈_ S)
+   { F-obj    = λ S → ((Setoid.Carrier S) / (Setoid._≈_ S)) , squash/
 
    ; F-map    = λ {A B} f →
       SQ.rec squash/
