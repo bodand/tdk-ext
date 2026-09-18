@@ -14,7 +14,7 @@ open import Setoid.Setoid
 J₂ : (ℓ : Level) → Functor (CubicalC.Category ℓ) (SetoidC.Category ℓ ℓ)
 J₂ ℓ = record
    { F-obj      = λ X → record
-      { Carrier = X
+      { Carrier = fst X
       ; _≈_     = _≡_
       ; ≈-equiv = record
          { reflexive  = λ x → refl

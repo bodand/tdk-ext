@@ -3,14 +3,15 @@
 module Cubical.Category where
 
 open import Cubical.Foundations.Prelude
+open import Cubical.Foundations.HLevels using (hSet)
 open import Cubical.Relation.Binary as R
 
 import Meta.Category as MC
 
 Category : (ℓ : Level) → MC.Category (ℓ-suc ℓ) ℓ ℓ
 Category ℓ = record
-   { Ob       = Type ℓ
-   ; Hom      = λ A B → (A → B)
+   { Ob       = hSet ℓ
+   ; Hom      = λ A B → (fst A → fst B)
    ; _~=_     = _≡_
    ; ~=-equiv = record
       { reflexive  = λ f → refl
@@ -24,4 +25,3 @@ Category ℓ = record
    ; id-right = λ f → refl
    ; assoc    = λ f g h → refl
    }
-
