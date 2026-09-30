@@ -90,6 +90,8 @@ Id→JQ : (ℓ : Level) → NaturalTransformation (IdFunctor {C = SetoidC.Catego
 Id→JQ ℓ = record
    { component  = λ {S} → record
       { fun       = λ y → [ y ]
+      -- TODO itt   ^~~~~~~~~~~ ez a ηS, amit a levélben küldtél? Vagy ezt külön még definiálni
+      -- kellene valamihez még?
       ; preserves = λ r → eq/ _ _ r
       }
    ; naturality = λ f y → refl

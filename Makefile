@@ -1,8 +1,11 @@
 .POSIX:
-.PHONY: all lint clean distclean
+.PHONY: todo all lint clean distclean
 
 all:
 	agda src/Index.agda
+
+todo:
+	find . -name "*.agda" -type f -exec grep -q "TODO" {} ";" -print -exec grep -nC 3 "TODO" {} ";"
 
 lint:
 	find . -name "*.agda" -type f -exec sed -i "s/[ 	]*$$//" {} ";"
