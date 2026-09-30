@@ -20,12 +20,6 @@ record QuotientSection { ℓ : Level } (S : Setoid ℓ ℓ) : Type ℓ where
       representative : Setoid.Carrier S / Setoid._≈_ S → Setoid.Carrier S
       right-inverse : (q : Setoid.Carrier S / Setoid._≈_ S) → [ representative q ] ≡ q 
 
--- TODO Ez nem lenne így egyértelműbb, hogy mit csinálunk? Mmint explicit kimondani,
---      hogy itt bevezetjük, az AoC-t?
---      A --safe flagnek mondjuk a `postulate' nem tetszik
---postulate
-   --axiomOfChoice : ∀ {ℓ} (S : Setoid ℓ ℓ) → QuotientSection S
-
 module Choice (sectionS : ∀ {ℓ} (S : Setoid ℓ ℓ) → QuotientSection S) where
    open import Common.NaturalTransformation
 

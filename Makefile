@@ -5,7 +5,7 @@ all:
 	agda src/Index.agda
 
 todo:
-	find . -name "*.agda" -type f -exec grep -q "TODO" {} ";" -print -exec grep -nC 3 "TODO" {} ";"
+	find . -name "*.agda" -type f -exec grep -q "TODO" {} ";" -print -exec grep -nA 6 "TODO" {} ";"
 
 lint:
 	find . -name "*.agda" -type f -exec sed -i "s/[ 	]*$$//" {} ";"
